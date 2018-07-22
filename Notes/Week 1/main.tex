@@ -1,0 +1,221 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{multirow,booktabs}
+\usepackage[table]{xcolor}
+\usepackage{fullpage}
+\usepackage{lastpage}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{wrapfig}
+\usepackage{setspace}
+\usepackage{calc}
+\usepackage{multicol}
+\usepackage{cancel}
+\usepackage[retainorgcmds]{IEEEtrantools}
+\usepackage[margin=3cm]{geometry}
+\usepackage{amsmath}
+\newlength{\tabcont}
+ \usepackage{booktabs}
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+\usepackage{empheq}
+\usepackage{framed}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor}
+\colorlet{shadecolor}{orange!15}
+\parindent 0in
+\parskip 12pt
+\geometry{margin=1in, headsep=0.25in}
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newtheorem{reg}{Rule}
+\newtheorem{exer}{Exercise}
+\newtheorem{note}{Note}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage[compact]{titlesec}
+\titlespacing{\section}{0pt}{*0}{*0}
+\titlespacing{\subsection}{0pt}{*0}{*0}
+\titlespacing{\subsubsection}{0pt}{*0}{*0}
+\setlist[itemize]{noitemsep, topsep=-10pt}
+\setlist[enumerate]{topsep=-10pt,itemsep=-1ex,partopsep=1ex,parsep=1ex}
+\setlength{\OuterFrameSep}{0pt}
+\graphicspath{ {./images/} }
+\newcommand*{\Co}[2]{{}^{#1}C_{#2}}%
+\lstset{
+    language=C++,
+    basicstyle=\ttfamily,
+    keywordstyle=\color{blue}\ttfamily,
+    stringstyle=\color{red}\ttfamily,
+    commentstyle=\color{green}\ttfamily,
+    morecomment=[l][\color{magenta}]{\#}
+}
+\NewDocumentCommand{\codeword}{v}{%
+\texttt{\textbf{#1}}%
+}
+
+\begin{document}
+\title{Week 1 Notes}
+\thispagestyle{empty}
+
+\begin{center}
+{\vspace{5mm} \LARGE ECE 250 - Fall 2018 \\ \vspace{5mm}Aditya Arora\\
+\vspace{5mm} 6th September 2018}\\
+{\vspace{5mm} \LARGE \bf Week 2 Notes}
+
+\end{center}
+\section{Introduction}
+\textbf{Data Structures:} Way to represent/encode data. Example: array, linked list vs \codeword{int}, \codeword{char} i.e. "basic types"\\
+\textbf{Algorithm:} Set of instructions to make a data structure useful. For example
+\begin{lstlisting}
+SEARCH(A[0,...n-1], i)
+    for j from 0 to n-1
+        if A[j] = i then return true
+    return false
+\end{lstlisting}
+Algorithms have two efficiencies related to them, time efficiency and space efficiency
+Interesting note: space efficiency \codeword{j} is not constant space since \codeword{j} has to be of data type to reach size \codeword{n}, which means that its space efficiency is $log_2n$
+
+"The Trade-Off"
+\begin{lstlisting}
+MEDIAN(A[0,...n-1]) // n is odd
+    SORT(A)
+    return A[(n-1)/2]
+\end{lstlisting}
+Another one
+\begin{lstlisting}
+MEDIAN(A[0,...n-1]) // n is odd
+    while true
+        pick i uniformly at random from 0,...,n-1:
+        check if A[i] is median
+        if true, return A[i]
+\end{lstlisting}
+The median can be checked by:
+\begin{lstlisting}
+CHECK_MEDIAN(A[0,...n-1]) // n is odd
+    c <- 0
+    for j from 0 to n-1
+    if A[j] < A[i]:
+        c <- c+1
+    if c = (n-1)/2:
+        return true 
+\end{lstlisting}
+\newpage
+\section{Containers, Relations and Abstract Data Types}
+\subsection{Abstract Data Types}
+The term Abstract Data Type (or ADT) is used to model the storage, access, manipulation, and removal of related data. These operations will be divided into two general categories:
+\begin{enumerate}
+    \item Queries that determine the properties of the objects that are stored
+    \item Data manipulations that modify the objects being stored
+\end{enumerate} 
+\subsubsection{Containers}
+The most general Abstract Data Type (ADT): A container describes structure that store and give access to objects
+The queries and operations of interest may be defined on:\\
+-  The container as an entity\\
+-  The objects stored within a container
+
+\begin{table}[!h]
+\begin{tabular}{ll}
+\hline
+\multicolumn{1}{l}{\textbf{Manipulation}} & \multicolumn{1}{l}{\textbf{Standard Template Library Equivalent}} \\ \hline
+Create a new container                      & \codeword{Container()}                                                        \\
+Copy an existing container and its contents & \codeword{Container( Container const & )}                                    \\
+Destroy a container                         & $\sim$\codeword{Container()}                                                 \\
+Empty a container                           & \codeword{void clear()}                                                       \\
+Take the union of (or merge) two containers & \codeword{void insert( Container const & )}                                  \\
+Find the intersection of two containers     & no equivalence                                                    
+\end{tabular}
+\end{table}
+\begin{table}[!h]
+\begin{tabular}{ll}
+\hline
+\multicolumn{1}{l}{\textbf{Query}} & \multicolumn{1}{l}{\textbf{Standard Template Library Equivalent}} \\ \hline
+Is the container empty?                      & \codeword{bool empty() const}                                     \\
+How many objects are in the container?\;\;\;\;\;\; & \codeword{int size() const}                                    \\
+What is the maximum capacity of the    &  \codeword{int max_size() const}   \\
+container? \\
+\end{tabular}
+\end{table}
+\begin{table}[!h]
+\begin{tabular}{ll}
+\hline
+\multicolumn{1}{l}{\textbf{Query}} & \multicolumn{1}{l}{\textbf{Standard Template Library Equivalent}} \\ \hline
+Insert an object into the container & \codeword{void insert( Type const & )}                                     \\
+Remove an object from the container & \codeword{void erase( Type const & )}                                         \\
+Access or modify an object in the container & \codeword{iterator find( Type const & ) const}                               \\
+Determine the number of copies of an object  & \codeword{int count( Type const & ) const}
+\\ that are in a container \\
+Iterate (or step) through the objects  & \codeword{iterator begin() const} \\
+currently in the container \\
+\end{tabular}
+\end{table}
+
+\subsubsection{Simple and Associative Containers}
+\begin{table}[!h]
+\begin{tabular}{ll}
+\hline
+\multicolumn{1}{l}{\textbf{Simple Containers}} & \multicolumn{1}{l}{\textbf{Associative Containers}} \\ \hline
+Containers that store individual objects \;\;\;\;\;\;\;\;\;\;\; & Containers that store keys as well\\ 
+&  as the information associated with those keys \\
+\textit{Eg:} Temperature Readings in an Array \;\;\;\;\;\;\;\;\;\;\; & \textit{Eg:} Quest Server with Student Records with\\ 
+& Student ID key\\ 
+\end{tabular}
+\end{table}
+\subsubsection{Unique or Duplicate Objects}
+Design Requirement might be to either:
+\begin{enumerate}
+    \item Store duplicate identical records
+    \item Require that all objects be unique
+\end{enumerate}
+We assume uniqueness unless stated specifically, more often than not this requirement only requires subtle code changes
+\subsubsection{The Standard Template Library (STL)}
+The STL has four containers related to our discussions above:
+
+\begin{table}[!h]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{} & \textbf{Unique Objects/Keys} & Duplicate Objects/Keys  \\ \midrule
+Simple Container of Objects                & \textbackslash{}codeword\{set\textless{}T\textgreater{}\}    & \textbackslash{}codeword\{multiset\textless{}T\textgreater{}\}    \\ 
+Associative Containers of key-object pairs & \textbackslash{}codeword\{map\textless{}K, T\textgreater{}\} & \textbackslash{}codeword\{multimap\textless{}K, T\textgreater{}\} \\ 
+\end{tabular}
+}
+\end{table}
+\begin{lstlisting}
+#include <iostream> 
+#include <set>
+
+int main() {
+    std::set<int> ints;
+    // Inserts 101 values 10000, ..., 9, 4, 1, 0, 1, 4, 9, ..., 10000 
+    // in that order 
+    for ( int i = -100; i <= 100; ++i ) {
+        ints.insert( i*i ); // Ignores duplicates: (-3)*(-3) == 3*3 
+    }
+    std::cout << "Size of 'is': " << ints.size() << std::endl;  // Prints 101
+    ints.erase( 50 );                 // Does nothing
+    ints.erase( 9 );                  // Removes 9
+    std::cout << "Size of 'is': " << ints.size() << std::endl;  // Prints 100
+    return 0; 
+}
+\end{lstlisting}
+\subsubsection{Operations}
+We must account for all current and future design requirements, moreover in some cases design requirements may be constrained to improve memory or time performance
+\subsubsection{Relationships}
+In general, we may not only want to store data, but we may need to also store relationships between the stored data, for example:
+\begin{enumerate}
+    \item A genealogical database must not only store people but must also store family relations
+    \item \codeword{maps.google.ca} must not only store roads but how those roads are connected (they actually store intersections and for each intersections, which other intersections are adjacent to it
+\end{enumerate}
+\paragraph{2.1.6.1 No Relationships Required}
+
+
+
+\end{document}
+
+
+
+
