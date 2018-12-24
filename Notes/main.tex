@@ -1,0 +1,227 @@
+\documentclass[10pt]{article}
+
+\usepackage{answers}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{circuitikz}
+\usepackage{adjustbox}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{svg}
+\usepackage{clrscode3e}
+\usepackage{listings}
+\usepackage[margin=3cm]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{8} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{8}  % for normal
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclarePairedDelimiter\angled{\langle}{\rangle}
+
+\setlist[itemize]{label={--}, topsep=-10pt, noitemsep}
+\setlist[enumerate]{topsep=-10pt, noitemsep}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\codeword}[1]{%
+\texttt{\textbf{#1}}%
+}
+
+\newcommand\pythonstyle{
+\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false            % 
+}
+}
+
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Aditya Arora}
+\rhead{page \thepage}
+\cfoot{ECE 250 Final Preparation}
+\renewcommand{\headrulewidth}{0.2pt}
+\begin{document}
+\begin{flushleft}
+\begin{enumerate}[topsep=-10pt, itemsep=10pt]
+    \item In Bubble sort, we "bubble" large items to the back of the array by repeatedly comparing adjacent items.  Following are two versions.  The first argument, $A$,  is an array of distinct positive  integers  and  the  second, k,  is  the  size  of  the  array.   We  assume  that the  array  is indexed $A[0,\dots \dots k-1]$.
+    \begin{python}
+def BUBBLESORT_1(A):
+    for i in range(1, len(A)):
+        for j in range(len(A), i, -1):
+            if A[j] < A[j+1]:
+                k = A[j]
+                A[j] = A[j+1]
+                A[j+1] = k
+    return A
+    \end{python}
+    \begin{python}
+def BUBBLESORT_2(L):
+    swapped = True
+    while swapped:
+        swapped = False
+        for i in range(len(L) - 1):
+            if L[i] > L[i+1]:
+                k = L[i]
+                A[i] = A[i+1]
+                A[i+1] = k
+                swapped = True 
+    \end{python}
+        \begin{python}
+def BUBBLESORT_3(A):
+    if len(A) == 1:
+        return A
+    for i in range(1, len(A)-1):
+        if A[i] > A[i+1]:
+            swap(A[i], A[i+1])
+    return BUBBLESORT_3(A[:len(A)-1]) + A[len(A)]
+    \end{python}
+    Assuming that it takes $k$ bits to encode $min,\dots,max$
+    \begin{enumerate}
+        \item In $\Theta(\cdot)$ compare the run-time of the two algorithms
+        \item What is the worst case space efficiency for the two algorithms
+    \end{enumerate}
+    \item  Recall our array encoding of a complete binary tree: the parent of a node at index $i$ is at index $\floor{i/2}$, its left child is at index 2$i$, and its right child is at index 2$i$ + 1. We can use such an array encoding for any kind of binary tree, e.g., a binary search tree, or a binary heap. A binary search tree has the property that the key of a node is larger than every key in its left sub-tree, and smaller than every key in its right sub-tree. In a heap, the key of a node is smaller than the keys of all its descendants.
+    \begin{enumerate}
+        %  https://www.geeksforgeeks.org/convert-bst-min-heap/
+        \item Given as input an array $A[1,\dots,n]$ that encodes a complete binary BST of distinct keys, write down pseudo-code for an efficient algorithm to convert $A[0,\dots \dots n-1]$ into a complete heap.
+        \item Given as input an array $A[1,\dots,n]$ that encodes a complete binary BST of distinct keys, write down pseudo-code for an efficient algorithm to convert $A[0,\dots \dots n-1]$ into a complete heap \textbf{BUT} this time in-place \textit{i.e.} without creating any intermediate data structures to store the entirety of the tree
+    \end{enumerate}
+    \newpage
+    \item Recall the notion of a Minimum spanning tree for a weighted connected undirected graph $G = \angled{V, E, w}$ with all positive edge weights: it is a spanning tree that minimizes the sum of weights of edges across all spanning trees of G.
+    \begin{codebox}
+    \Procname{$\proc{Kruskal}(G =  \angled{V, E, w})$}
+    \li $A \leftarrow \phi$ 
+    \li \textbf{foreach} $u\; \epsilon\; V$ do $\proc{make-set}(u)$
+    \li \textbf{foreach} $\angled{u,v}\; \epsilon\; E$ in non decreasing order of weight
+        \Do
+    \li \If $\proc{find-set}(u) \neq \proc{find-set}(v)$
+    \li \Then $A \leftarrow A \cup {\angled{u,v}}$
+    \li \proc{union(u,v)}
+    \End
+    \End
+    \li \Return $A$
+    \end{codebox}
+    \vspace{0 mm}
+    \begin{enumerate}
+        \item Prove correctness of Kruskal's Algorithm 
+        \item Show that the smallest non-cyclic edge is a valid greedy choice
+        \item Let $e$ be a maximum-weight edge on some cycle of connected graph $G =  \angled{V, E}$. Prove that there is a minimum spanning tree of $G' =  \angled{V, E-{e}}$ that is also a minimum spanning tree of $G$. That is, there is a minimum spanning tree of $G$ that does not include $e$.
+        \item Argue that if all edge weights of a graph are positive, then any subset of edges that connects all vertices and has minimum total weight must be a tree.
+        % pg 2: http://sites.math.rutgers.edu/~ajl213/CLRS/Ch23.pdf
+        \item Given a graph $G$ and a minimum spanning tree $T$ , suppose that we decrease the weight of one of the edges in $T$ . Show that $T$ is still a minimum spanning tree for $G$. More formally, let $T$ be a minimum spanning tree for G with edge weights given by weight function $w$. Choose one edge $(x,y)\; \epsilon\; T$ and a positive number $k$, and define the weight function $w'$ by
+        \[w'(u,v) = \begin{cases} 
+            w(u,v) & \text{if } (u,v) \neq (x,y) \\
+            w(x,y) - k & \text{if } (u,v) = (x,y) \\
+            \end{cases}
+        \]\\
+        Show that $T$ is a minimum spanning tree for $G$ with edge weights given by $w'$.
+        % pg 403: https://cdn.manesht.ir/19908/Introduction%20to%20Algorithms.pdf 
+        \item Given a graph $G$ and a minimum spanning tree $T$ , suppose that we decrease the weight of one of the edges not in $T$ . Give an algorithm for finding the minimum spanning tree in the modified graph.
+        \item Kruskal’s algorithm can return different spanning trees for the same input graph $G$, depending on how it breaks ties when the edges are sorted into order. Show that for each minimum spanning tree $T$ of $G$, there is a way to sort the edges of $G$ in Kruskal’s algorithm so that the algorithm returns $T$.
+    \end{enumerate}
+    \newpage
+    \item Recall the problem of making change for a non-negative integer amount, a, given coin denominations $\angled{c_0,\dots,c_{k-1}}$, where each $c_j$ is a positive integer, $c_j < c_{j+1}$ for all $j = 0,\dots,k - 2$ and $c_0 = 1$. 
+    
+    We observed that the problem possesses optimal substructure as expressed by the following recurrence for $m[i]$, the minimum number of coins we need to make up amount $i$. Also, following is pseudocode for an algorithm based on dynamic programming that outputs $m[a]$
+    \[m[i] = \begin{cases} 
+      0 & \text{if } i = 0 \\
+      \infty & \text{if } i < 0 \\
+      1 + \min\limits_{0\leq j \leq k-1}\{m[i-c_j]\} & \text{otherwise}\\
+   \end{cases}
+    \]\\
+    % \begin{codebox}
+    % \Procname{$\proc{Wrapper}(a, \angled{c_0,\dots,c_{k-1}})$}
+    % \li 
+    % \li \If $i < 0$ \textbf{then} error
+    % \li ret $\leftarrow$ i
+    % \li \textbf{foreach} j from $0$ to $k-1$ \Do
+    % \li \If $c_j < i$ \Then
+    % \li $x \leftarrow 1 + M(i-c_j,\angled{c_0,\dots,c_{k-1}})$
+    % \li \If $ret > x$ then $ret \leftarrow x$
+    % \End
+    % \End
+    % \li \Return ret
+    % \end{codebox}
+    \vspace{5mm}
+    \begin{codebox}
+    \li \Comment Non Memoised version
+    \Procname{$\proc{M}(i, \angled{c_0,\dots,c_{k-1}})$}
+    \li \If $i = 0$ \textbf{then return 0}
+    \li \If $i < 0$ \textbf{then} \Error
+    \li ret $\leftarrow$ i
+    \li \textbf{foreach} j from $0$ to $k-1$ \Do
+    \li \If $c_j < i$ \Then
+    \li $x \leftarrow 1 + M(i-c_j,\angled{c_0,\dots,c_{k-1}})$
+    \li \If $ret > x$ then $ret \leftarrow x$
+    \End
+    \End
+    \li \Return ret
+    \end{codebox}
+    \begin{codebox}
+    \Procname{$\proc{M-DP}(i, \angled{c_0,\dots,c_{k-1}})$} 
+    % \li \If $i = 0$ \textbf{then return 0}
+    \li \Comment Memoised version, Bottom-up
+    \li \If $a < 0$ \textbf{then} \Error
+    \li $m \leftarrow$ new array $[0, \dots a]$
+    \li $m[0] \leftarrow 0$
+    % \li ret $\leftarrow$ i
+    \li \textbf{foreach} i from $1$ to $a$ \Do
+    \li $m[i] \leftarrow i$
+    \li \textbf{foreach} j from $0$ to $k-1$ \Do
+    \li \If $c_j < i$ \Then
+    \li \If $m[i] > 1 + m[i - c_j]$ \Then
+    \li $m[i] = 1 + m[i - c_j]$
+    \End\End\End\End
+    \li \Return $m[a]$
+    % \li \If $x \leftarrow 1 + M(i-c_j,\angled{c_0,\dots,c_{k-1}})$
+    % \li \If $ret > x$ then $ret \leftarrow x$
+    % \End
+    % \End
+    % \li \Return ret
+    \end{codebox}
+    \underline{\textbf{Part I}}
+    \begin{enumerate}[]
+        \item Write down another recurrence, this one for $S[a]$, that computes the the number of combinations that make up that amount $a$. \textit{[Assume that you have infinite number of each kind of coin, and that the order of coins doesn’t matter]}
+        % http://www.algorithmist.com/index.php/Coin_Change
+        \item Write down pseudo-code for a new version of the algorithm based on dynamic programming that outputs $S[a]$, the number of combinations. Can you give both Bottom-up and Top-Down approaches?
+        \item Write down pseudo-code for a new version of the algorithm based on dynamic programming that outputs $m[a]$ but this time using the top down approach
+        \item Write down pseudo-code for a new version of the algorithm based on dynamic programming that outputs $m[a]$ along with the coin set.
+        \\
+    \end{enumerate}
+    \vspace{5mm}
+    \underline{\textbf{Part II}}\\
+    % \vspace{10pt}
+    Humans unlike algorithms aren't always the most efficient. Given the coin denominations $\angled{1,12,19}$ for making a sum of $24$ we would often choose to return $\angled{19,1,1,1,1}$ instead of the most efficient $\angled{12,12}$. 
+    \begin{enumerate}
+        % https://cs.uwaterloo.ca/~shallit/Papers/change2.pdf
+        \item What algorithmic design approach are we used to using in our day to day life for computing change given that we have coins of denomination $\angled{1,2,5,10}$?
+        \item Does this approach work for combinations with other denominations? What is the alternative algorithm approach that we should use instead? \textit{}
+    \end{enumerate}
+\end{enumerate}
+\end{flushleft}
+
+\end{document}
